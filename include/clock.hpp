@@ -1,65 +1,56 @@
-#include <ncurses.h>
-#include <ctime>
-#include <functional>
-#include <string>
+#include <format>
+#include "clock.hpp"
 
-#include "libfiglet.hpp"
+void App::refresh() {
+    werase(twin);
+    box(twin, 0, 0);
 
-namespace fs = std::filesystem;
-using namespace srilakshmikanthanp::libfiglet;
+    auto time = curr_time();
 
-#define CPAIR_HR 1
-#define CPAIR_ERR 1
-#define CPAIR_MIN 2
-#define CPAIR_SEC 3
-#define CPAIR_BAR 4
-#define CPAIR_OVERLAY 5
+    const auto colon = fig(":");
+    const auto colonuse = colused(colon);
+    const auto h_txt = fig(std::format("{:02}", time.h));
+    const auto m_txt = fig(std::format("{:02}", time.m));
+    const auto s_txt = fig(std::format("{:02}", time.s));
 
-#ifndef ctrl
-#    define ctrl(x) ((x) & 0x1f)
-#endif
+    int total_w = colused(h_txt) + colused(colon) + colused(m_txt) + colused(colon) + colused(s_txt);
 
-struct Rect {
-    int x, y, w, h;
-};
+    int ccol = (twin_sz.w - 2 - total_w) / 2 + 1;
+    int row = (twin_sz.h - 2 - fig.get_font()->get_height()) / 2 + 1;
 
-struct Time {
-    int h, m, s;
-};
+    cblock(twin, CPAIR_HR, [&]() {
+        auto txt = fig(std::format("{:02}", time.h));
+        mvwprintfig(twin, row, ccol, txt);
+        ccol += colused(txt);
+    });
 
-struct WinSz {
-    int r, c;
-};
+    mvwprintfig(twin, row, ccol, colon);
+    ccol += colonuse;
 
-class App {
-  public:
-    App();
+    cblock(twin, CPAIR_MIN, [&]() {
+        auto txt = fig(std::format("{:02}", time.m));
+        mvwprintfig(twin, row, ccol, txt);
+        ccol += colused(txt);
+    });
 
-    int run();
+    mvwprintfig(twin, row, ccol, colon);
+    ccol += colonuse;
 
-  private:
-    Time curr_time();
-    void cblock(WINDOW* win, attr_t cpid, std::function<void()> fnc);
-    int colused(const std::string& str);
-    void mvwprintfig(WINDOW* win, int row, int col, const std::string& fig_str);
-    long local_utcoff();
+    cblock(twin, CPAIR_SEC, [&]() {
+        auto txt = fig(std::format("{:02}", time.s));
+        mvwprintfig(twin, row, ccol, txt);
+        ccol += colused(txt);
+    });
 
-    std::string format_tzoff(long off_sec);
+    cblock(barwin, CPAIR_BAR, [&]() {
+        std::string color_string = (has_colors()) ? "COLORED" : "NO COLOR";
+        std::string font_string = fs::path(font_path).filename().string();
+        std::string tz_string = std::format("local ({})", format_tzoff(local_utcoff()));
 
-    void refresh();
+        mvwprintw(barwin, 0, 0, " %s | %s | %s | ctrl+k: view keybinds", color_string.c_str(), tz_string.c_str(), font_string.c_str());
+    });
 
-    WINDOW* create_overlay();
-    void do_error(const char* err);
-
-    void do_kbdb_win();
-
-    void do_new_fontload();
-    void load_font(const std::string& path);
-
-    Rect twin_sz;
-    WINDOW *twin, *barwin;
-    clock_t last_refresh;
-    figlet fig;
-    std::string font_path;
-    WinSz wsz;
-};
+    ::refresh();
+    wrefresh(twin);
+    wrefresh(barwin);
+}
