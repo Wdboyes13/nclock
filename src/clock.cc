@@ -1,5 +1,7 @@
 #include <ncurses.h>
-#include <ctime>
+#include <chrono>
+#include <exception>
+#include <iostream>
 
 #include "clock.hpp"
 
@@ -7,6 +9,10 @@ using namespace srilakshmikanthanp::libfiglet;
 
 int App::run() {
     this->refresh();
+
+    timeout(100);
+
+    auto last_tick = std::chrono::steady_clock::now();
 
     while (true) {
         int c = getch();
@@ -20,9 +26,12 @@ int App::run() {
             this->load_font("./standard.flf");
         }
 
-        uint64_t dms = (clock() - last_refresh) / (CLOCKS_PER_SEC / 1000);
+        auto now = std::chrono::steady_clock::now();
+        auto dms = std::chrono::duration_cast<std::chrono::milliseconds>(now - last_tick).count();
+        
         if (dms >= 500) {
             this->refresh();
+            last_tick = now;
         }
     }
 
@@ -31,6 +40,12 @@ int App::run() {
 }
 
 int main() {
-    auto app = new App;
-    return app->run();
+    try {
+        App app;
+        return app.run();
+    } catch (const std::exception& e) {
+        endwin();
+        std::cerr << "Fatal Error: " << e.what() << std::endl;
+        return 1;
+    }
 }
