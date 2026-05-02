@@ -1,4 +1,5 @@
 #include "clock.hpp"
+#include <sstream>
 
 App::App() : fig(FlfFont::make_shared("./standard.flf"), FullWidth::make_shared()) {
     font_path = "./standard.flf";

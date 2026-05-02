@@ -1,6 +1,7 @@
 #include <form.h>
 #include <string>
 #include <exception>
+#include <sstream>
 #include "clock.hpp"
 
 void App::do_new_fontload() {
@@ -83,33 +84,40 @@ done:
 }
 
 void App::load_font(const std::string& path) {
-    if (fs::exists(path)) {
-        try {
-            const auto new_font = FlfFont::make_shared(path);
-            fig.set_font(new_font);
-            delwin(twin);
-
-            const std::string test = fig("00:00:00");
-            int rendered_w = 0;
-            {
-                std::istringstream ss(test);
-                std::string line;
-                while (std::getline(ss, line)) {
-                    rendered_w = std::max(rendered_w, static_cast<int>(line.size()));
-                }
-            }
-
-            twin_sz.h = static_cast<int>(fig.get_font()->get_height()) + 2;
-            twin_sz.w = rendered_w + 10;
-            twin_sz.y = (wsz.r - twin_sz.h) / 2;
-            twin_sz.x = (wsz.c - twin_sz.w) / 2;
-
-            twin = newwin(twin_sz.h, twin_sz.w, twin_sz.y, twin_sz.x);
-            font_path = path;
-        } catch (const std::exception& e) {
-            this->do_error("Invalid font format!");
-        }
-    } else {
+    if (!fs::exists(path)) {
         this->do_error("Empty or bad path, will not set font");
+        return;
+    }
+    
+    WINDOW* old_twin = nullptr;
+    try {
+        const auto new_font = FlfFont::make_shared(path);
+        fig.set_font(new_font);
+        old_twin = twin;
+        twin = nullptr;
+
+        const std::string test = fig("00:00:00");
+        int rendered_w = 0;
+        {
+            std::istringstream ss(test);
+            std::string line;
+            while (std::getline(ss, line)) {
+                rendered_w = std::max(rendered_w, static_cast<int>(line.size()));
+            }
+        }
+
+        twin_sz.h = static_cast<int>(fig.get_font()->get_height()) + 2;
+        twin_sz.w = rendered_w + 10;
+        twin_sz.y = (wsz.r - twin_sz.h) / 2;
+        twin_sz.x = (wsz.c - twin_sz.w) / 2;
+
+        twin = newwin(twin_sz.h, twin_sz.w, twin_sz.y, twin_sz.x);
+        font_path = path;
+        
+        if (old_twin) delwin(old_twin);
+    } catch (const std::exception& e) {
+        twin = old_twin;
+        old_twin = nullptr;
+        this->do_error("Invalid font format!");
     }
 }

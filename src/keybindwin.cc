@@ -15,7 +15,7 @@ void App::do_kbdb_win() {
     mvwprintw(dialog, 6, 2, "");
     mvwprintw(dialog, 7, 2, "Command-line usage:");
     mvwprintw(dialog, 8, 2, "  -f, --format <strftime>  Set time format (default: %%H:%%M:%%S)");
-    
+
     keypad(dialog, true);
     wrefresh(dialog);
 

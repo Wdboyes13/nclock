@@ -5,6 +5,7 @@
 #include <ncurses.h>
 #include <string>
 #include <ctime>
+#include <sstream>
 
 #include "libfiglet.hpp"
 #include "timeutils.hpp"

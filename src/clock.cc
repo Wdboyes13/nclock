@@ -6,14 +6,19 @@ int App::run() {
     this->refresh();
 
     while (true) {
-        const int c = getch();
-        if (c == ctrl('q')) {
+        const int ch = getch();
+        if (ch == ctrl('q')) {
             break;
-        } else if (c == ctrl('k')) {
+        } else if (ch == KEY_RESIZE) {
+            getmaxyx(stdscr, wsz.r, wsz.c);
+            if (barwin) delwin(barwin);
+            if (twin) delwin(twin);
+            init_ncurses();
+        } else if (ch == ctrl('k')) {
             this->do_kbdb_win();
-        } else if (c == 'f') {
+        } else if (ch == 'f') {
             this->do_new_fontload();
-        } else if (c == 'd') {
+        } else if (ch == 'd') {
             this->load_font("./standard.flf");
         }
 

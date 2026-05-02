@@ -1,4 +1,5 @@
 #include <format>
+#include <sstream>
 #include "clock.hpp"
 
 int get_figlet_width(const std::string& fig_str) {

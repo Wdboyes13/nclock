@@ -1,11 +1,32 @@
 #include "clock.hpp"
 #include <cstdio>
 #include <ctime>
+#include <sstream>
+#include <cctype>
 
 Time App::curr_time() {
+#ifdef _WIN32
     const auto ctime = time(nullptr);
     auto t = localtime(&ctime);
+#else
+    const auto ctime = time(nullptr);
+    std::tm tm_buf;
+    auto t = localtime_r(&ctime, &tm_buf);
+#endif
     return Time{ t->tm_hour, t->tm_min, t->tm_sec };
+}
+
+std::string App::format_time() {
+    const auto ctime = std::time(nullptr);
+#ifdef _WIN32
+    auto t = std::localtime(&ctime);
+#else
+    std::tm tm_buf;
+    auto t = std::localtime_r(&ctime, &tm_buf);
+#endif
+    char buf[128];
+    std::strftime(buf, sizeof(buf), format_str.c_str(), t);
+    return std::string(buf);
 }
 
 void App::parse_args(int argc, char* argv[]) {
@@ -19,14 +40,6 @@ void App::parse_args(int argc, char* argv[]) {
             format_str = arg.substr(8);
         }
     }
-}
-
-std::string App::format_time() {
-    const auto ctime = std::time(nullptr);
-    auto t = std::localtime(&ctime);
-    char buf[128];
-    std::strftime(buf, sizeof(buf), format_str.c_str(), t);
-    return std::string(buf);
 }
 
 void App::cblock(WINDOW* win, attr_t cpid, std::function<void()> fnc) {

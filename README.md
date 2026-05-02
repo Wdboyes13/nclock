@@ -42,10 +42,10 @@ make run
 ### Command-line Options
 
 ```bash
-./nclock -f "%H:%M:%S"     # Default format (24-hour time)
-./nclock -f "%I:%M:%S %p"  # 12-hour time with AM/PM
-./nclock -f "%Y-%m-%d"    # Date only (year-month-day)
-./nclock -f "%H:%M:%S\n%A"  # Time with weekday on second line
+./nclock -f "%H:%M:%S"       # Default format (24-hour time)
+./nclock -f "%I:%M:%S %p"    # 12-hour time with AM/PM
+./nclock -f "%Y-%m-%d"       # Date only (year-month-day)
+./nclock -f "%H:%M:%S\n%A"   # Time with weekday on second line
 ```
 
 The `-f` or `--format` flag accepts any [strftime format string](https://en.cppreference.com/w/cpp/io/manip/put_time).

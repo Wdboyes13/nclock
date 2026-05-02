@@ -21,7 +21,7 @@ void App::do_error(const char* err) {
     cblock(dialog, app_constants::CPAIR_ERR, [&]() {
         mvwprintw(dialog, 2, 3, "!!Error!!");
     });
-    mvwprintw(dialog, 3, 5, err);
+    mvwprintw(dialog, 3, 5, "%s", err);
 
     const int btn_row = dh - 3;
     const int btn_col = (dw - 6) / 2;
