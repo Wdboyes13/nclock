@@ -4,6 +4,7 @@
 #include <functional>
 #include <ncurses.h>
 #include <string>
+#include <ctime>
 
 #include "libfiglet.hpp"
 #include "timeutils.hpp"
@@ -42,10 +43,13 @@ struct WinSz {
 class App {
 public:
     App();
+    App(int argc, char* argv[]);
     ~App();
     int run();
 
 private:
+    void parse_args(int argc, char* argv[]);
+    std::string format_time();
     Time curr_time();
     void cblock(WINDOW* win, attr_t cpid, std::function<void()> fnc);
     int colused(const std::string& str);
@@ -57,6 +61,7 @@ private:
     void do_kbdb_win();
     void do_new_fontload();
     void load_font(const std::string& path);
+    void init_ncurses();
 
     Rect twin_sz;
     WINDOW *twin{nullptr};
@@ -65,4 +70,5 @@ private:
     Figlet fig;
     std::string font_path;
     WinSz wsz;
+    std::string format_str{"%H:%M:%S"};
 };

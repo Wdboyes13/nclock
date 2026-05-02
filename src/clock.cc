@@ -26,7 +26,7 @@ int App::run() {
     return 0;
 }
 
-int main() {
-    App app;
+int main(int argc, char* argv[]) {
+    App app(argc, argv);
     return app.run();
 }

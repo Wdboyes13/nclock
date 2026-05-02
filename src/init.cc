@@ -2,7 +2,18 @@
 
 App::App() : fig(FlfFont::make_shared("./standard.flf"), FullWidth::make_shared()) {
     font_path = "./standard.flf";
+    init_ncurses();
+    this->refresh();
+}
 
+App::App(int argc, char* argv[]) : fig(FlfFont::make_shared("./standard.flf"), FullWidth::make_shared()) {
+    font_path = "./standard.flf";
+    parse_args(argc, argv);
+    init_ncurses();
+    this->refresh();
+}
+
+void App::init_ncurses() {
     initscr();
     noecho();
     raw();
@@ -42,8 +53,6 @@ App::App() : fig(FlfFont::make_shared("./standard.flf"), FullWidth::make_shared(
     if (has_colors()) {
         wbkgd(barwin, COLOR_PAIR(app_constants::CPAIR_BAR));
     }
-
-    this->refresh();
 }
 
 App::~App() {

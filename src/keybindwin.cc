@@ -12,6 +12,9 @@ void App::do_kbdb_win() {
     mvwprintw(dialog, 3, 2, "Show keybinds: CTRL + K");
     mvwprintw(dialog, 4, 2, "Quit or close dialogue: CTRL + Q");
     mvwprintw(dialog, 5, 2, "Open font change menu: F");
+    mvwprintw(dialog, 6, 2, "");
+    mvwprintw(dialog, 7, 2, "Command-line usage:");
+    mvwprintw(dialog, 8, 2, "  -f, --format <strftime>  Set time format (default: %%H:%%M:%%S)");
     
     keypad(dialog, true);
     wrefresh(dialog);
