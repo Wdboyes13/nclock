@@ -1,6 +1,5 @@
 #include <form.h>
 #include <exception>
-#include <string>
 #include "clock.hpp"
 #include "efont.hpp"
 

@@ -1,4 +1,3 @@
-#include <curses.h>
 #include "clock.hpp"
 
 WINDOW* App::create_overlay() {

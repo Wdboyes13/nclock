@@ -1,6 +1,7 @@
 #include <sstream>
 #include "clock.hpp"
 #include "efont.hpp"
+
 App::App() : fig(nullptr), tzoff(TzOff::LOCAL) {
     std::istringstream iss{ reinterpret_cast<char*>(standard_flf) };
     fig = new figlet(flf_font::make_shared(iss), full_width::make_shared());

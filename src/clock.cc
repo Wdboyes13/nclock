@@ -5,8 +5,6 @@
 
 #include "clock.hpp"
 
-using namespace srilakshmikanthanp::libfiglet;
-
 int App::run() {
     this->refresh();
 
