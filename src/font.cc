@@ -95,6 +95,7 @@ void App::load_font(const std::string& path) {
             werase(twin);
             wrefresh(twin);
             delwin(twin);
+            twin = nullptr;
 
             const std::string test = (*fig)("88:88:88");
             int rendered_w = 0;
