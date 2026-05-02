@@ -54,7 +54,7 @@ void App::do_new_fontload() {
 done:
 
     form_driver(form, REQ_VALIDATION);
-    std::string path = field_buffer(fields[0], 0);
+    std::string path = field_buffer(fields[0], 0);    
 
     size_t last_char = path.find_last_not_of(' ');
     if (last_char != std::string::npos) {
@@ -70,7 +70,6 @@ done:
     delwin(dialog);
     delwin(overlay);
     curs_set(false);
-
     touchwin(stdscr);
     touchwin(twin);
     touchwin(barwin);
