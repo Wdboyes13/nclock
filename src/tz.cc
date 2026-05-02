@@ -23,6 +23,7 @@ void App::do_new_timezone() {
 
     curs_set(true);
 
+    ::refresh();
     wrefresh(dialog);
 
     while (true) {
@@ -53,7 +54,13 @@ done:
 
     form_driver(form, REQ_VALIDATION);
     std::string offstr = field_buffer(fields[0], 0);
-    offstr.erase(offstr.find_last_not_of(' ') + 1);
+
+    size_t last_char = offstr.find_last_not_of(' ');
+    if (last_char != std::string::npos) {
+        offstr.erase(last_char + 1);
+    } else {
+        offstr.clear();
+    }
 
     unpost_form(form);
     free_form(form);
