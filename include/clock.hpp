@@ -1,65 +1,64 @@
-#include <ncurses.h>
-#include <ctime>
+#pragma once
+
+#include <filesystem>
 #include <functional>
+#include <ncurses.h>
 #include <string>
 
 #include "libfiglet.hpp"
+#include "timeutils.hpp"
 
 namespace fs = std::filesystem;
-using namespace srilakshmikanthanp::libfiglet;
 
-#define CPAIR_HR 1
-#define CPAIR_ERR 1
-#define CPAIR_MIN 2
-#define CPAIR_SEC 3
-#define CPAIR_BAR 4
-#define CPAIR_OVERLAY 5
+namespace app_constants {
+    constexpr int CPAIR_HR = 1;
+    constexpr int CPAIR_ERR = 1;
+    constexpr int CPAIR_MIN = 2;
+    constexpr int CPAIR_SEC = 3;
+    constexpr int CPAIR_BAR = 4;
+    constexpr int CPAIR_OVERLAY = 5;
+}
 
 #ifndef ctrl
 #    define ctrl(x) ((x) & 0x1f)
 #endif
 
 struct Rect {
-    int x, y, w, h;
+    int x{}, y{}, w{}, h{};
 };
 
 struct Time {
-    int h, m, s;
+    int h{}, m{}, s{};
 };
 
 struct WinSz {
-    int r, c;
+    int r{}, c{};
 };
 
 class App {
-  public:
+public:
     App();
-
+    ~App();
     int run();
 
-  private:
+private:
     Time curr_time();
     void cblock(WINDOW* win, attr_t cpid, std::function<void()> fnc);
     int colused(const std::string& str);
     void mvwprintfig(WINDOW* win, int row, int col, const std::string& fig_str);
-    long local_utcoff();
-
-    std::string format_tzoff(long off_sec);
-
+    std::string get_utc_offset_string();
     void refresh();
-
     WINDOW* create_overlay();
     void do_error(const char* err);
-
     void do_kbdb_win();
-
     void do_new_fontload();
     void load_font(const std::string& path);
 
     Rect twin_sz;
-    WINDOW *twin, *barwin;
-    clock_t last_refresh;
-    figlet fig;
+    WINDOW *twin{nullptr};
+    WINDOW *barwin{nullptr};
+    clock_t last_refresh{};
+    Figlet fig;
     std::string font_path;
     WinSz wsz;
 };

@@ -1,9 +1,7 @@
-#include <algorithm>
-#include <format>
 #include "clock.hpp"
 
 Time App::curr_time() {
-    auto ctime = time(nullptr);
+    const auto ctime = time(nullptr);
     auto t = localtime(&ctime);
     return Time{ t->tm_hour, t->tm_min, t->tm_sec };
 }
@@ -25,8 +23,8 @@ int App::colused(const std::string& str) {
 
     while (std::getline(stream, line)) {
         std::wstring ws(line.begin(), line.end());
-        int w = wcswidth(ws.c_str(), ws.size());
-        max_cols = std::max(max_cols, w == -1 ? (int)line.size() : w);
+        const int w = wcswidth(ws.c_str(), static_cast<int>(ws.size()));
+        max_cols = std::max(max_cols, w == -1 ? static_cast<int>(line.size()) : w);
     }
 
     return max_cols;
@@ -41,17 +39,6 @@ void App::mvwprintfig(WINDOW* win, int row, int col, const std::string& fig_str)
     }
 }
 
-long App::local_utcoff() {
-    auto now = time(NULL);
-    auto time = localtime(&now);
-
-    return time->tm_gmtoff;
-}
-
-std::string App::format_tzoff(long off_sec) {
-    char sign = off_sec >= 0 ? '+' : '-';
-    long abs_off = std::abs(off_sec);
-    int hours = abs_off / 3600;
-    int minutes = (abs_off % 3600) / 60;
-    return std::format("{}{:02}:{:02}", sign, hours, minutes);
+std::string App::get_utc_offset_string() {
+    return timeutils::get_formatted_utc_offset();
 }

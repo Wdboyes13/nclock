@@ -1,15 +1,12 @@
 #include <ncurses.h>
 #include <ctime>
-
 #include "clock.hpp"
-
-using namespace srilakshmikanthanp::libfiglet;
 
 int App::run() {
     this->refresh();
 
     while (true) {
-        int c = getch();
+        const int c = getch();
         if (c == ctrl('q')) {
             break;
         } else if (c == ctrl('k')) {
@@ -20,17 +17,16 @@ int App::run() {
             this->load_font("./standard.flf");
         }
 
-        uint64_t dms = (clock() - last_refresh) / (CLOCKS_PER_SEC / 1000);
+        const uint64_t dms = static_cast<uint64_t>(clock() - last_refresh) / (CLOCKS_PER_SEC / 1000);
         if (dms >= 500) {
             this->refresh();
         }
     }
 
-    endwin();
     return 0;
 }
 
 int main() {
-    auto app = new App;
-    return app->run();
+    App app;
+    return app.run();
 }

@@ -1,11 +1,11 @@
 #include "clock.hpp"
 
 void App::do_kbdb_win() {
-    auto overlay = create_overlay();
-
-    int dh = wsz.r - 20, dw = wsz.c - 20;
+    const auto overlay = create_overlay();
+    const int dh = wsz.r - 20;
+    const int dw = wsz.c - 20;
     WINDOW* dialog = newwin(dh, dw, 10, 10);
-    wbkgd(dialog, COLOR_PAIR(CPAIR_OVERLAY));
+    wbkgd(dialog, COLOR_PAIR(app_constants::CPAIR_OVERLAY));
     box(dialog, 0, 0);
     mvwprintw(dialog, 1, 2, "Keybinds");
 
@@ -14,11 +14,10 @@ void App::do_kbdb_win() {
     mvwprintw(dialog, 5, 2, "Open font change menu: F");
     
     keypad(dialog, true);
-
     wrefresh(dialog);
 
     while (true) {
-        int c = wgetch(dialog);
+        const int c = wgetch(dialog);
         if (c == ctrl('q')) {
             break;
         }

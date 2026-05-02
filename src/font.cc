@@ -1,13 +1,13 @@
 #include <form.h>
-#include <string>
 #include "clock.hpp"
 
 void App::do_new_fontload() {
-    auto overlay = create_overlay();
+    const auto overlay = create_overlay();
 
-    int dh = 15, dw = 45;
+    const int dh = 15;
+    const int dw = 45;
     WINDOW* dialog = newwin(dh, dw, (wsz.r - dh) / 2, (wsz.c - dw) / 2);
-    wbkgd(dialog, COLOR_PAIR(CPAIR_OVERLAY));
+    wbkgd(dialog, COLOR_PAIR(app_constants::CPAIR_OVERLAY));
     box(dialog, 0, 0);
     mvwprintw(dialog, 2, 3, "Enter path to font");
 
@@ -23,11 +23,10 @@ void App::do_new_fontload() {
     keypad(dialog, true);
 
     curs_set(true);
-
     wrefresh(dialog);
 
     while (true) {
-        int c = wgetch(dialog);
+        const int c = wgetch(dialog);
         switch (c) {
             case '\n':
                 goto done;
@@ -54,7 +53,13 @@ done:
 
     form_driver(form, REQ_VALIDATION);
     std::string path = field_buffer(fields[0], 0);
-    path.erase(path.find_last_not_of(' ') + 1);
+    
+    const size_t last_non_space = path.find_last_not_of(' ');
+    if (last_non_space != std::string::npos) {
+        path = path.substr(0, last_non_space + 1);
+    } else {
+        path.clear();
+    }
 
     unpost_form(form);
     free_form(form);
@@ -75,7 +80,7 @@ done:
 
 void App::load_font(const std::string& path) {
     if (!path.empty() && fs::exists(path)) {
-        fig.set_font(flf_font::make_shared(path));
+        fig.set_font(FlfFont::make_shared(path));
         delwin(twin);
 
         const std::string test = fig("00:00:00");
@@ -84,11 +89,11 @@ void App::load_font(const std::string& path) {
             std::istringstream ss(test);
             std::string line;
             while (std::getline(ss, line)) {
-                rendered_w = std::max(rendered_w, (int)line.size());
+                rendered_w = std::max(rendered_w, static_cast<int>(line.size()));
             }
         }
 
-        twin_sz.h = fig.get_font()->get_height() + 2;
+        twin_sz.h = static_cast<int>(fig.get_font()->get_height()) + 2;
         twin_sz.w = rendered_w + 10;
         twin_sz.y = (wsz.r - twin_sz.h) / 2;
         twin_sz.x = (wsz.c - twin_sz.w) / 2;
