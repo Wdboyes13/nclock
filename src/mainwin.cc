@@ -16,7 +16,6 @@ void App::refresh() {
     int total_w = colused(h_txt) + colused(colon) + colused(m_txt) + colused(colon) + colused(s_txt);
 
     int ccol = (twin_sz.w - 2 - total_w) / 2 + 1;
-    int row = (twin_sz.h - 2 - fig->get_font()->get_height()) / 2 + 1;
 
     cblock(twin, CPAIR_HR, [&]() {
         auto txt = (*fig)(std::format("{:02}", time.h));
