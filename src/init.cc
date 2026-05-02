@@ -16,6 +16,7 @@ App::App() : fig(flf_font::make_shared("./standard.flf"), full_width::make_share
         init_pair(CPAIR_SEC, COLOR_BLUE, COLOR_BLACK);
         init_pair(CPAIR_BAR, COLOR_BLACK, COLOR_WHITE);
         init_pair(CPAIR_OVERLAY, COLOR_WHITE, COLOR_BLACK);
+        init_pair(CPAIR_ERR, COLOR_WHITE, COLOR_RED); 
     }
 
     getmaxyx(stdscr, wsz.r, wsz.c);

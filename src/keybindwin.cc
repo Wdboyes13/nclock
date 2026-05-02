@@ -12,11 +12,13 @@ void App::do_kbdb_win() {
     mvwprintw(dialog, 3, 2, "Show keybinds: CTRL + K");
     mvwprintw(dialog, 4, 2, "Quit or close dialogue: CTRL + Q");
     mvwprintw(dialog, 5, 2, "Open font change menu: F");
+    
+    keypad(dialog, true);
 
     wrefresh(dialog);
 
     while (true) {
-        int c = getch();
+        int c = wgetch(dialog);
         if (c == ctrl('q')) {
             break;
         }
