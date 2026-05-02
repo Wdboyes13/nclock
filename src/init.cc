@@ -1,7 +1,8 @@
 #include "clock.hpp"
 
-App::App() : fig(flf_font::make_shared("./standard.flf"), full_width::make_shared()) {
+App::App() : fig(flf_font::make_shared("./standard.flf"), full_width::make_shared()), tzoff(TzOff::LOCAL) {
     font_path = "./standard.flf";
+    local_off = local_utcoff();
 
     initscr();
     noecho();

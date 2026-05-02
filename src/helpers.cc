@@ -1,6 +1,30 @@
 #include <algorithm>
 #include <format>
+#include <sstream>
+#include <cmath>
 #include "clock.hpp"
+
+void App::set_tz_from_offset(long off) {
+    int h = std::abs(off) / 3600;
+    int m = (std::abs(off) % 3600) / 60;
+    char sign = off >= 0 ? '-' : '+';
+    auto tz = std::format("UTC{}{:02}:{:02}", sign, h, m);
+    setenv("TZ", tz.c_str(), 1);
+    tzset();
+    tzoff = TzOff(off);
+}
+
+long App::tzstr_to_offset(const std::string& str) {
+    int h = 0, m = 0;
+    char sign;
+
+    if (sscanf(str.c_str(), "%c%d:%d", &sign, &h, &m) < 2) {
+        throw std::runtime_error("Invalid offset format");
+    }
+
+    long seconds = (h * 3600) + (m * 60);
+    return sign == '-' ? -seconds : seconds;
+}
 
 Time App::curr_time() {
     auto ctime = time(nullptr);
@@ -24,9 +48,7 @@ int App::colused(const std::string& str) {
     std::string line;
 
     while (std::getline(stream, line)) {
-        std::wstring ws(line.begin(), line.end());
-        int w = wcswidth(ws.c_str(), ws.size());
-        max_cols = std::max(max_cols, w == -1 ? (int)line.size() : w);
+        max_cols = std::max(max_cols, static_cast<int>(line.size()));
     }
 
     return max_cols;
@@ -43,9 +65,18 @@ void App::mvwprintfig(WINDOW* win, int row, int col, const std::string& fig_str)
 
 long App::local_utcoff() {
     auto now = time(NULL);
-    auto time = localtime(&now);
-
-    return time->tm_gmtoff;
+    auto t = localtime(&now);
+    char buf[6];
+    strftime(buf, sizeof(buf), "%z", t);
+    
+    std::string tz(buf);
+    if (tz.length() == 5) {
+        int hours = std::stoi(tz.substr(1, 2));
+        int minutes = std::stoi(tz.substr(3, 2));
+        long offset = (hours * 3600) + (minutes * 60);
+        return tz[0] == '-' ? -offset : offset;
+    }
+    return 0;
 }
 
 std::string App::format_tzoff(long off_sec) {

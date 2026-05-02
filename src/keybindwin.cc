@@ -11,7 +11,11 @@ void App::do_kbdb_win() {
 
     mvwprintw(dialog, 3, 2, "Show keybinds: CTRL + K");
     mvwprintw(dialog, 4, 2, "Quit or close dialogue: CTRL + Q");
-    mvwprintw(dialog, 5, 2, "Open font change menu: F");
+    mvwprintw(dialog, 5, 2, "Open font change menu: CTRL + F");
+    mvwprintw(dialog, 6, 2, "Change font to default: CTRL + D");
+    mvwprintw(dialog, 7, 2, "Change time zone: CTRL + T");
+    mvwprintw(dialog, 8, 2, "Change time zone to UTC: CTRL + U");
+    mvwprintw(dialog, 9, 2, "Change time zone to Local: CTRL + L");
 
     wrefresh(dialog);
 
