@@ -47,6 +47,7 @@ struct TzOff {
 class App {
   public:
     App();
+    ~App();
 
     int run();
 
@@ -60,6 +61,7 @@ class App {
     std::string format_tzoff(long off_sec);
 
     void refresh();
+    WINDOW* newwin(int nlines, int ncols, int begin_y, int begin_x);
 
     WINDOW* create_overlay();
     void do_error(const char* err);

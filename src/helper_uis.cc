@@ -39,8 +39,10 @@ void App::do_error(const char* err) {
     delwin(overlay);
 
     touchwin(stdscr);
-    touchwin(twin);
     touchwin(barwin);
-    wrefresh(twin);
+    if (twin) {
+        touchwin(twin);
+        wrefresh(twin);
+    }
     ::refresh();
 }

@@ -50,3 +50,7 @@ App::App() : fig(nullptr), tzoff(TzOff::LOCAL) {
 
     this->refresh();
 }
+
+App::~App() {
+    delete fig;
+}

@@ -76,5 +76,9 @@ done:
     wrefresh(twin);
     ::refresh();
 
-    set_tz_from_offset(tzstr_to_offset(offstr));
+    if (!offstr.empty()) {
+        set_tz_from_offset(tzstr_to_offset(offstr));
+    } else {
+        do_error("No offset specified");
+    }
 }

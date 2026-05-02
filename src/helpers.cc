@@ -1,7 +1,8 @@
 #include <algorithm>
+#include <cmath>
 #include <format>
 #include <sstream>
-#include <cmath>
+#include <stdexcept>
 #include "clock.hpp"
 
 void App::set_tz_from_offset(long off) {
@@ -18,8 +19,15 @@ long App::tzstr_to_offset(const std::string& str) {
     int h = 0, m = 0;
     char sign;
 
-    if (sscanf(str.c_str(), "%c%d:%d", &sign, &h, &m) < 2) {
-        throw std::runtime_error("Invalid offset format");
+    if (str.size() > 1 && (str[0] == '-' || str[0] == '+')) {
+        if (sscanf(str.c_str(), "%c%d:%d", &sign, &h, &m) < 2) {
+            throw std::runtime_error("Invalid offset format");
+        }
+    } else {
+        sign = '+';
+        if (sscanf(str.c_str(), "%d:%d", &h, &m) < 2) {
+            throw std::runtime_error("Invalid offset format");
+        }
     }
 
     long seconds = (h * 3600) + (m * 60);
@@ -85,4 +93,12 @@ std::string App::format_tzoff(long off_sec) {
     int hours = abs_off / 3600;
     int minutes = (abs_off % 3600) / 60;
     return std::format("{}{:02}:{:02}", sign, hours, minutes);
+}
+
+WINDOW* App::newwin(int nlines, int ncols, int begin_y, int begin_x) {
+    WINDOW* win = ::newwin(nlines, ncols, begin_y, begin_x);
+    if (!win) {
+        throw std::runtime_error("Cannot create window");
+    }
+    return win;
 }
