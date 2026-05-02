@@ -1,5 +1,6 @@
 #include <form.h>
 #include <string>
+#include <exception>
 #include "clock.hpp"
 
 void App::do_new_fontload() {
@@ -54,7 +55,13 @@ done:
 
     form_driver(form, REQ_VALIDATION);
     std::string path = field_buffer(fields[0], 0);
-    path.erase(path.find_last_not_of(' ') + 1);
+    
+    size_t last_char = path.find_last_not_of(' ');
+    if (last_char != std::string::npos) {
+        path.erase(last_char + 1);
+    } else {
+        path.clear(); 
+    }
 
     unpost_form(form);
     free_form(form);
@@ -63,38 +70,45 @@ done:
     delwin(dialog);
     delwin(overlay);
     curs_set(false);
-
     touchwin(stdscr);
     touchwin(twin);
     touchwin(barwin);
     wrefresh(twin);
     ::refresh();
 
-    load_font(path);
+    if (!path.empty()) {
+        load_font(path);
+    }
 }
 
 void App::load_font(const std::string& path) {
-    if (!path.empty() && fs::exists(path)) {
-        fig.set_font(flf_font::make_shared(path));
-        delwin(twin);
+    if (fs::exists(path)) {
+        try {
+            auto new_font = flf_font::make_shared(path);
+            fig.set_font(new_font);
+            delwin(twin);
 
-        const std::string test = fig("00:00:00");
-        int rendered_w = 0;
-        {
-            std::istringstream ss(test);
-            std::string line;
-            while (std::getline(ss, line)) {
-                rendered_w = std::max(rendered_w, (int)line.size());
+            const std::string test = fig("00:00:00");
+            int rendered_w = 0;
+            {
+                std::istringstream ss(test);
+                std::string line;
+                while (std::getline(ss, line)) {
+                    rendered_w = std::max(rendered_w, (int)line.size());
+                }
             }
+
+            twin_sz.h = fig.get_font()->get_height() + 2;
+            twin_sz.w = rendered_w + 10;
+            twin_sz.y = (wsz.r - twin_sz.h) / 2;
+            twin_sz.x = (wsz.c - twin_sz.w) / 2;
+
+            twin = newwin(twin_sz.h, twin_sz.w, twin_sz.y, twin_sz.x);
+            font_path = path;
+        } catch (const std::exception& e) {
+            std::string err_msg = "Invalid font format!";
+            this->do_error(err_msg.c_str());
         }
-
-        twin_sz.h = fig.get_font()->get_height() + 2;
-        twin_sz.w = rendered_w + 10;
-        twin_sz.y = (wsz.r - twin_sz.h) / 2;
-        twin_sz.x = (wsz.c - twin_sz.w) / 2;
-
-        twin = newwin(twin_sz.h, twin_sz.w, twin_sz.y, twin_sz.x);
-        font_path = path;
     } else {
         this->do_error("Empty or bad path, will not set font");
     }
