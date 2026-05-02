@@ -86,9 +86,12 @@ void App::load_font(const std::string& path) {
         try {
             auto new_font = flf_font::make_shared(path);
             fig.set_font(new_font);
+
+            werase(twin);
+            wrefresh(twin);
             delwin(twin);
 
-            const std::string test = fig("00:00:00");
+            const std::string test = fig("88:88:88");
             int rendered_w = 0;
             {
                 std::istringstream ss(test);
