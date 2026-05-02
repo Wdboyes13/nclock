@@ -8,6 +8,10 @@
 #include "libfiglet.hpp"
 #include "timeutils.hpp"
 
+using srilakshmikanthanp::libfiglet::Figlet;
+using srilakshmikanthanp::libfiglet::FlfFont;
+using srilakshmikanthanp::libfiglet::FullWidth;
+
 namespace fs = std::filesystem;
 
 namespace app_constants {
