@@ -1,7 +1,8 @@
 #include <form.h>
-#include <string>
 #include <exception>
+#include <string>
 #include "clock.hpp"
+#include "efont.hpp"
 
 void App::do_new_fontload() {
     auto overlay = create_overlay();
@@ -82,16 +83,21 @@ done:
 }
 
 void App::load_font(const std::string& path) {
-    if (fs::exists(path)) {
+    if (fs::exists(path) || path == EMBEDDED_FONT) {
         try {
-            auto new_font = flf_font::make_shared(path);
-            fig.set_font(new_font);
+            if (path == EMBEDDED_FONT) {
+                std::istringstream iss{ reinterpret_cast<char*>(standard_flf) };
+                fig->set_font(flf_font::make_shared(iss));
+            } else {
+                auto new_font = flf_font::make_shared(path);
+                fig->set_font(new_font);
+            }
 
             werase(twin);
             wrefresh(twin);
             delwin(twin);
 
-            const std::string test = fig("88:88:88");
+            const std::string test = (*fig)("88:88:88");
             int rendered_w = 0;
             {
                 std::istringstream ss(test);
@@ -101,7 +107,7 @@ void App::load_font(const std::string& path) {
                 }
             }
 
-            twin_sz.h = fig.get_font()->get_height() + 2;
+            twin_sz.h = fig->get_font()->get_height() + 2;
             twin_sz.w = rendered_w + 10;
             twin_sz.y = (wsz.r - twin_sz.h) / 2;
             twin_sz.x = (wsz.c - twin_sz.w) / 2;

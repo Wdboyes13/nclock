@@ -23,7 +23,7 @@ int App::run() {
         } else if (c == ctrl('f')) {
             this->do_new_fontload();
         } else if (c == ctrl('d')) {
-            this->load_font("./standard.flf");
+            this->load_font(EMBEDDED_FONT);
         } else if (c == ctrl('t')) {
             this->do_new_timezone();
         } else if (c == ctrl('u')) {

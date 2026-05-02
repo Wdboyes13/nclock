@@ -7,19 +7,19 @@ void App::refresh() {
 
     auto time = curr_time();
 
-    const auto colon = fig(":");
+    const auto colon = (*fig)(":");
     const auto colonuse = colused(colon);
-    const auto h_txt = fig(std::format("{:02}", time.h));
-    const auto m_txt = fig(std::format("{:02}", time.m));
-    const auto s_txt = fig(std::format("{:02}", time.s));
+    const auto h_txt = (*fig)(std::format("{:02}", time.h));
+    const auto m_txt = (*fig)(std::format("{:02}", time.m));
+    const auto s_txt = (*fig)(std::format("{:02}", time.s));
 
     int total_w = colused(h_txt) + colused(colon) + colused(m_txt) + colused(colon) + colused(s_txt);
 
     int ccol = (twin_sz.w - 2 - total_w) / 2 + 1;
-    int row = (twin_sz.h - 2 - fig.get_font()->get_height()) / 2 + 1;
+    int row = (twin_sz.h - 2 - fig->get_font()->get_height()) / 2 + 1;
 
     cblock(twin, CPAIR_HR, [&]() {
-        auto txt = fig(std::format("{:02}", time.h));
+        auto txt = (*fig)(std::format("{:02}", time.h));
         mvwprintfig(twin, 1, ccol, txt);
         ccol += colused(txt);
     });
@@ -28,7 +28,7 @@ void App::refresh() {
     ccol += colonuse;
 
     cblock(twin, CPAIR_MIN, [&]() {
-        auto txt = fig(std::format("{:02}", time.m));
+        auto txt = (*fig)(std::format("{:02}", time.m));
         mvwprintfig(twin, 1, ccol, txt);
         ccol += colused(txt);
     });
@@ -37,14 +37,14 @@ void App::refresh() {
     ccol += colonuse;
 
     cblock(twin, CPAIR_SEC, [&]() {
-        auto txt = fig(std::format("{:02}", time.s));
+        auto txt = (*fig)(std::format("{:02}", time.s));
         mvwprintfig(twin, 1, ccol, txt);
         ccol += colused(txt);
     });
 
     cblock(barwin, CPAIR_BAR, [&]() {
         std::string color_string = (has_colors()) ? "COLORED" : "NO COLOR";
-        std::string font_string = fs::path(font_path).filename().c_str();
+        std::string font_string = (font_path == EMBEDDED_FONT) ? "standard (embedded)" : fs::path(font_path).filename().c_str();
         std::string tz_string;
 
         switch (tzoff.type) {

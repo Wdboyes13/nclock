@@ -17,6 +17,8 @@ using namespace srilakshmikanthanp::libfiglet;
 #define CPAIR_BAR 4
 #define CPAIR_OVERLAY 5
 
+#define EMBEDDED_FONT "__embedded__"
+
 #ifndef ctrl
 #    define ctrl(x) ((x) & 0x1f)
 #endif
@@ -73,7 +75,7 @@ class App {
 
     Rect twin_sz;
     WINDOW *twin, *barwin;
-    figlet fig;
+    figlet* fig;
     std::string font_path;
     WinSz wsz;
     TzOff tzoff;

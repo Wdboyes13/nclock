@@ -1,7 +1,11 @@
+#include <sstream>
 #include "clock.hpp"
+#include "efont.hpp"
+App::App() : fig(nullptr), tzoff(TzOff::LOCAL) {
+    std::istringstream iss{ reinterpret_cast<char*>(standard_flf) };
+    fig = new figlet(flf_font::make_shared(iss), full_width::make_shared());
 
-App::App() : fig(flf_font::make_shared("./standard.flf"), full_width::make_shared()), tzoff(TzOff::LOCAL) {
-    font_path = "./standard.flf";
+    font_path = EMBEDDED_FONT;
     local_off = local_utcoff();
 
     initscr();
@@ -21,7 +25,7 @@ App::App() : fig(flf_font::make_shared("./standard.flf"), full_width::make_share
 
     getmaxyx(stdscr, wsz.r, wsz.c);
 
-    const std::string test = fig("88:88:88");
+    const std::string test = (*fig)("88:88:88");
     int rendered_w = 0;
     {
         std::istringstream ss(test);
@@ -31,7 +35,7 @@ App::App() : fig(flf_font::make_shared("./standard.flf"), full_width::make_share
         }
     }
 
-    twin_sz.h = fig.get_font()->get_height() + 2;
+    twin_sz.h = fig->get_font()->get_height() + 2;
     twin_sz.w = rendered_w + 10;
     twin_sz.y = (wsz.r - twin_sz.h) / 2;
     twin_sz.x = (wsz.c - twin_sz.w) / 2;
