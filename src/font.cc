@@ -1,4 +1,5 @@
 #include <form.h>
+#include <limits.h>
 #include <exception>
 #include "clock.hpp"
 #include "efont.hpp"
@@ -14,7 +15,8 @@ void App::do_new_fontload() {
 
     FIELD* fields[] = { new_field(1, 39, 0, 0, 0, 0), nullptr };
     set_field_back(fields[0], A_UNDERLINE);
-    field_opts_off(fields[0], O_AUTOSKIP);
+    field_opts_off(fields[0], O_AUTOSKIP | O_STATIC);
+    set_max_field(fields[0], PATH_MAX);
 
     FORM* form = new_form(fields);
     WINDOW* fsub = derwin(dialog, 1, 39, 4, 3);
@@ -44,6 +46,12 @@ void App::do_new_fontload() {
             case KEY_RIGHT:
                 form_driver(form, REQ_NEXT_CHAR);
                 break;
+            case KEY_UP:
+                form_driver(form, REQ_BEG_FIELD);
+                break;
+            case KEY_DOWN:
+                form_driver(form, REQ_END_FIELD);
+                break;
             default:
                 form_driver(form, c);
                 break;
@@ -54,7 +62,7 @@ void App::do_new_fontload() {
 done:
 
     form_driver(form, REQ_VALIDATION);
-    std::string path = field_buffer(fields[0], 0);    
+    std::string path = field_buffer(fields[0], 0);
 
     size_t last_char = path.find_last_not_of(' ');
     if (last_char != std::string::npos) {
