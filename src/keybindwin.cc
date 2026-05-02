@@ -17,10 +17,11 @@ void App::do_kbdb_win() {
     mvwprintw(dialog, 8, 2, "Change time zone to UTC: CTRL + U");
     mvwprintw(dialog, 9, 2, "Change time zone to Local: CTRL + L");
 
+    ::refresh();
     wrefresh(dialog);
 
     while (true) {
-        int c = getch();
+        int c = wgetch(dialog);
         if (c == ctrl('q')) {
             break;
         }

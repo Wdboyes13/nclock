@@ -1,13 +1,17 @@
+#include <curses.h>
 #include "clock.hpp"
 
 WINDOW* App::create_overlay() {
     WINDOW* overlay = newwin(wsz.r, wsz.c, 0, 0);
     wbkgd(overlay, COLOR_PAIR(CPAIR_OVERLAY));
-    for (int r = 0; r < wsz.r; r++) {
+    /*for (int r = 0; r < wsz.r; r++) {
         for (int c = 0; c < wsz.c; c++) {
             mvwaddch(overlay, r, c, ' ' | A_DIM);
         }
-    }
+    }*/
+
+    werase(overlay);
+    wrefresh(overlay);
     return overlay;
 }
 
