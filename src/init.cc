@@ -21,7 +21,7 @@ App::App() : fig(flf_font::make_shared("./standard.flf"), full_width::make_share
 
     getmaxyx(stdscr, wsz.r, wsz.c);
 
-    const std::string test = fig("00:00:00");
+    const std::string test = fig("88:88:88");
     int rendered_w = 0;
     {
         std::istringstream ss(test);
