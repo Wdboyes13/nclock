@@ -45,7 +45,22 @@ void App::refresh() {
     cblock(barwin, CPAIR_BAR, [&]() {
         std::string color_string = (has_colors()) ? "COLORED" : "NO COLOR";
         std::string font_string = fs::path(font_path).filename().c_str();
-        std::string tz_string = std::format("local ({})", format_tzoff(local_utcoff()));
+        std::string tz_string;
+
+        switch (tzoff.type) {
+            case TzOff::LOCAL: {
+                tz_string = std::format("local ({})", format_tzoff(local_utcoff()));
+                break;
+            }
+            case TzOff::NONLOCAL: {
+                tz_string = std::format("non-local ({})", format_tzoff(local_utcoff()));
+                break;
+            }
+            case TzOff::UTC: {
+                tz_string = "UTC (+00:00)";
+                break;
+            }
+        }
 
         mvwprintw(barwin, 0, 0, " %s | %s | %s | ctrl+k: view keybinds", color_string.c_str(), tz_string.c_str(), font_string.c_str());
     });
@@ -53,5 +68,4 @@ void App::refresh() {
     ::refresh();
     wrefresh(twin);
     wrefresh(barwin);
-    last_refresh = clock();
 }

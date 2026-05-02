@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <ctime>
 #include <functional>
+#include <optional>
 #include <string>
 
 #include "libfiglet.hpp"
@@ -31,6 +32,15 @@ struct WinSz {
     int r, c;
 };
 
+struct TzOff {
+    enum TzOffType { LOCAL,
+                     UTC,
+                     NONLOCAL } type;
+    std::optional<long> off;
+    TzOff(TzOffType type) : type(type), off(std::nullopt) {}
+    TzOff(long off) : type(NONLOCAL), off(off) {}
+};
+
 class App {
   public:
     App();
@@ -56,10 +66,15 @@ class App {
     void do_new_fontload();
     void load_font(const std::string& path);
 
+    void do_new_timezone();
+    void set_tz_from_offset(long off);
+    long tzstr_to_offset(const std::string& str);
+
     Rect twin_sz;
     WINDOW *twin, *barwin;
-    clock_t last_refresh;
     figlet fig;
     std::string font_path;
     WinSz wsz;
+    TzOff tzoff;
+    long local_off = 0;
 };

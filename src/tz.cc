@@ -1,14 +1,14 @@
 #include <form.h>
 #include "clock.hpp"
 
-void App::do_new_fontload() {
+void App::do_new_timezone() {
     auto overlay = create_overlay();
 
     int dh = 15, dw = 45;
     WINDOW* dialog = newwin(dh, dw, (wsz.r - dh) / 2, (wsz.c - dw) / 2);
     wbkgd(dialog, COLOR_PAIR(CPAIR_OVERLAY));
     box(dialog, 0, 0);
-    mvwprintw(dialog, 2, 3, "Enter path to font");
+    mvwprintw(dialog, 2, 3, "Enter UTC offset");
 
     FIELD* fields[] = { new_field(1, 39, 0, 0, 0, 0), nullptr };
     set_field_back(fields[0], A_UNDERLINE);
@@ -52,8 +52,8 @@ void App::do_new_fontload() {
 done:
 
     form_driver(form, REQ_VALIDATION);
-    std::string path = field_buffer(fields[0], 0);
-    path.erase(path.find_last_not_of(' ') + 1);
+    std::string offstr = field_buffer(fields[0], 0);
+    offstr.erase(offstr.find_last_not_of(' ') + 1);
 
     unpost_form(form);
     free_form(form);
@@ -69,32 +69,5 @@ done:
     wrefresh(twin);
     ::refresh();
 
-    load_font(path);
-}
-
-void App::load_font(const std::string& path) {
-    if (!path.empty() && fs::exists(path)) {
-        fig.set_font(flf_font::make_shared(path));
-        delwin(twin);
-
-        const std::string test = fig("00:00:00");
-        int rendered_w = 0;
-        {
-            std::istringstream ss(test);
-            std::string line;
-            while (std::getline(ss, line)) {
-                rendered_w = std::max(rendered_w, (int)line.size());
-            }
-        }
-
-        twin_sz.h = fig.get_font()->get_height() + 2;
-        twin_sz.w = rendered_w + 10;
-        twin_sz.y = (wsz.r - twin_sz.h) / 2;
-        twin_sz.x = (wsz.c - twin_sz.w) / 2;
-
-        twin = newwin(twin_sz.h, twin_sz.w, twin_sz.y, twin_sz.x);
-        font_path = path;
-    } else {
-        this->do_error("Empty or bad path, will not set font");
-    }
+    set_tz_from_offset(tzstr_to_offset(offstr));
 }

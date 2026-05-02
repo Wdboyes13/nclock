@@ -20,10 +20,18 @@ int App::run() {
             break;
         } else if (c == ctrl('k')) {
             this->do_kbdb_win();
-        } else if (c == 'f') {
+        } else if (c == ctrl('f')) {
             this->do_new_fontload();
-        } else if (c == 'd') {
+        } else if (c == ctrl('d')) {
             this->load_font("./standard.flf");
+        } else if (c == ctrl('t')) {
+            this->do_new_timezone();
+        } else if (c == ctrl('u')) {
+            this->set_tz_from_offset(0);
+            tzoff = TzOff(TzOff::UTC);
+        } else if (c == ctrl('l')) {
+            this->set_tz_from_offset(local_off);
+            tzoff = TzOff(TzOff::LOCAL);
         }
 
         auto now = std::chrono::steady_clock::now();
