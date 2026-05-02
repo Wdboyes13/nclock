@@ -1,5 +1,4 @@
 .clangd
-*.o
-compile_commands.json
 nclock
 .cache
+*build*/
