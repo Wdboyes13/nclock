@@ -13,7 +13,14 @@ WINDOW* App::create_overlay() {
 
 void App::do_error(const char* err) {
     const int old_curs = curs_set(0);
-    const auto overlay = create_overlay();
+    WINDOW* overlay = nullptr;
+
+    try {
+        overlay = create_overlay();
+    } catch (const std::exception& e) {
+        return;
+    }
+
     const int dh = 15, dw = 45;
     WINDOW* dialog = newwin(dh, dw, (wsz.r - dh) / 2, (wsz.c - dw) / 2);
     wbkgd(dialog, COLOR_PAIR(app_constants::CPAIR_OVERLAY));
@@ -36,9 +43,11 @@ void App::do_error(const char* err) {
 
     const int btn_row = dh - 3;
     const int btn_col = (dw - 6) / 2;
-    wattron(dialog, A_REVERSE);
-    mvwprintw(dialog, btn_row, btn_col, "[ OK ]");
-    wattroff(dialog, A_REVERSE);
+    cblock(dialog, app_constants::CPAIR_ERR, [&]() {
+        wattron(dialog, A_REVERSE);
+        mvwprintw(dialog, btn_row, btn_col, "[ OK ]");
+        wattroff(dialog, A_REVERSE);
+    });
 
     wnoutrefresh(dialog);
     doupdate();
@@ -58,8 +67,8 @@ void App::do_error(const char* err) {
     curs_set(old_curs);
 
     touchwin(stdscr);
-    if (twin) touchwin(twin);
-    if (barwin) touchwin(barwin);
-    if (twin) wrefresh(twin);
+    if (twin) { touchwin(twin); }
+    if (barwin) { touchwin(barwin); }
+    if (twin) { wrefresh(twin); }
     ::refresh();
 }
