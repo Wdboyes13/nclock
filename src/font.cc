@@ -65,33 +65,41 @@ void App::do_new_fontload() {
                     form_driver(form, c);
                 break;
         }
-        if (!done)
+        
+        if (!done) {
             wrefresh(dialog);
+        }
     }
 
     form_driver(form, REQ_VALIDATION);
     std::string path = field_buffer(fields[0], 0);
 
-    if (auto end = path.find_last_not_of(' '); end != std::string::npos)
+    if (auto end = path.find_last_not_of(' '); end != std::string::npos) {
         path.resize(end + 1);
-    else
+    } else {
         path.clear();
+    }
 
     unpost_form(form);
     free_form(form);
     free_field(fields[0]);
+    
     delwin(fsub);
     delwin(dialog);
     delwin(overlay);
+    
     curs_set(false);
+    
     touchwin(stdscr);
     touchwin(twin);
     touchwin(barwin);
+    
     wrefresh(twin);
     ::refresh();
     
-    if (!path.empty())
+    if (!path.empty()) {
         load_font(path);
+    }
 }
 
 void App::load_font(const std::string& path) {
@@ -110,6 +118,7 @@ void App::load_font(const std::string& path) {
 
         werase(twin);
         wrefresh(twin);
+        
         delwin(twin);
         twin = nullptr;
 
@@ -118,8 +127,9 @@ void App::load_font(const std::string& path) {
         {
             std::istringstream ss(test);
             std::string line;
-            while (std::getline(ss, line))
+            while (std::getline(ss, line)) {
                 rendered_w = std::max(rendered_w, static_cast<int>(line.size()));
+            }
         }
 
         twin_sz.h = fig->get_font()->get_height() + 2;
