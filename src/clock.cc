@@ -5,10 +5,8 @@
 
 #include "clock.hpp"
 
-namespace {
-    constexpr int INPUT_TIMEOUT_MS = 100;
-    constexpr int REFRESH_INTERVAL_MS = 500;
-}
+#define INPUT_TIMEOUT_MS 100
+#define REFRESH_INTERVAL_MS 500
 
 int App::run() {
     this->refresh();
