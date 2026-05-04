@@ -4,12 +4,10 @@
 #include "clock.hpp"
 #include "efont.hpp"
 
-namespace {
-    constexpr int DLG_H     = 15;
-    constexpr int DLG_W     = 45;
-    constexpr int FIELD_W   = 39;
-    constexpr const char* FONT_TEST = "88:88:88";
-}
+#define DLG_H     15
+#define DLG_W     45
+#define FIELD_W   39
+#define FONT_TEST "88:88:88"
 
 void App::do_new_fontload() {
     auto overlay = create_overlay();
