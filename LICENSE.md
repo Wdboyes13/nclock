@@ -16,6 +16,7 @@ This project redistributes 1 file from the FIGlet package: [`standard.flf`](/sta
 
 * **Original Source:** This package was obtained via the Homebrew package manager. But is available at http://www.figlet.org/
 * **License:** Redistributed under the BSD-3-Clause license at [`LICENSE.FIGLET`](/LICENSES/LICENSE.FIGLET).
+* **SPDX-License-Identifier:** BSD-3-Clause  
 
 **Copyright Information:**
 > Copyright (C) 1991, 1993, 1994 Glenn Chappell and Ian Chai  
@@ -29,6 +30,7 @@ This project redistributes a combined include file from the libfiglet package: [
 
 * **Original Source:** https://github.com/srilakshmikanthanp/libfiglet
 * **License:** Redistributed under the MIT license.
+* **SPDX-License-Identifier:** MIT  
 
 **Copyright Information:**
 > Copyright (c) 2021 Sri Lakshmi Kanthan P
