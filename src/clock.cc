@@ -5,42 +5,59 @@
 
 #include "clock.hpp"
 
+#define INPUT_TIMEOUT_MS 100
+#define REFRESH_INTERVAL_MS 500
+
 int App::run() {
     this->refresh();
 
-    timeout(100);
+    timeout(INPUT_TIMEOUT_MS);
+    keypad(stdscr, TRUE); // Enable KEY_RESIZE and function keys
 
     auto last_tick = std::chrono::steady_clock::now();
+    const auto tick = std::chrono::milliseconds(REFRESH_INTERVAL_MS);
 
     while (true) {
         int c = getch();
-        if (c == ctrl('q')) {
-            break;
-        } else if (c == ctrl('k')) {
-            this->do_kbdb_win();
-        } else if (c == ctrl('f')) {
-            this->do_new_fontload();
-        } else if (c == ctrl('d')) {
-            this->load_font(EMBEDDED_FONT);
-        } else if (c == ctrl('t')) {
-            this->do_new_timezone();
-        } else if (c == ctrl('u')) {
-            this->set_tz_from_offset(0);
-            tzoff = TzOff(TzOff::UTC);
-        } else if (c == ctrl('l')) {
-            this->set_tz_from_offset(local_off);
-            tzoff = TzOff(TzOff::LOCAL);
+
+        if (c != ERR) {
+            switch (c) {
+                case ctrl('q'):
+                    goto done;
+                case KEY_RESIZE:
+                    this->refresh();
+                    break;
+                case ctrl('k'):
+                    this->do_kbdb_win();
+                    break;
+                case ctrl('f'):
+                    this->do_new_fontload();
+                    break;
+                case ctrl('d'):
+                    this->load_font(EMBEDDED_FONT);
+                    break;
+                case ctrl('t'):
+                    this->do_new_timezone();
+                    break;
+                case ctrl('u'):
+                    this->set_tz_from_offset(0);
+                    tzoff = TzOff(TzOff::UTC);
+                    break;
+                case ctrl('l'):
+                    this->set_tz_from_offset(local_off);
+                    tzoff = TzOff(TzOff::LOCAL);
+                    break;
+            }
         }
 
         auto now = std::chrono::steady_clock::now();
-        auto dms = std::chrono::duration_cast<std::chrono::milliseconds>(now - last_tick).count();
-        
-        if (dms >= 500) {
+        if (now - last_tick >= tick) {
             this->refresh();
             last_tick = now;
         }
     }
 
+done:
     endwin();
     return 0;
 }
