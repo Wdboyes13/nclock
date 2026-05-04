@@ -4,7 +4,7 @@
 This project is licensed under the MIT License.
 The full license is available at [`LICENSE.NCLK`](/LICENSES/LICENSE.NCLK).
 
-**Copyright:** (C) 2026 Wdboyes13  
+**Copyright:** (C) 2026 [Wdboyes13](https://github.com/Wdboyes13), [44tl](https://github.com/44tl)  
 **SPDX-License-Identifier:** MIT  
 
 ---
