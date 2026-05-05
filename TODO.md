@@ -1,4 +1,5 @@
 # TODO
 
 ## List
-- Nothing for now
+- Add stopwatch mode
+- Add timer mode
