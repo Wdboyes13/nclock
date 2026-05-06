@@ -61,8 +61,9 @@ void App::do_new_fontload() {
                 form_driver(form, REQ_END_FIELD);
                 break;
             default:
-                if (c >= 32 && c < 127)
+                if (c >= 32 && c < 127) {
                     form_driver(form, c);
+                }
                 break;
         }
         
