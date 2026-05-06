@@ -37,7 +37,7 @@ long App::tzstr_to_offset(const std::string& str) {
 Time App::curr_time() {
     auto ctime = time(nullptr);
     auto t = localtime(&ctime);
-    return Time{ t->tm_hour, t->tm_min, t->tm_sec };
+    return Time{ (uint64_t)t->tm_hour, (uint64_t)t->tm_min, (uint64_t)t->tm_sec };
 }
 
 void App::cblock(WINDOW* win, attr_t cpid, std::function<void()> fnc) {

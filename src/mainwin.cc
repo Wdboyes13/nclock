@@ -65,9 +65,9 @@ void App::refresh() {
         cp_min = CPAIR_SEC;
         cp_sec = CPAIR_SEC;
     } else if (current_mode == Mode::TIMER) {
-        cp_hr = CPAIR_HR;
-        cp_min = CPAIR_HR;
-        cp_sec = CPAIR_HR;
+        cp_hr = CPAIR_MIN;
+        cp_min = CPAIR_MIN;
+        cp_sec = CPAIR_MIN;
     }
 
     cblock(twin, cp_hr, [&]() {

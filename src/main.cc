@@ -53,7 +53,7 @@ int App::run() {
                 case ctrl('s'):
                     current_mode = Mode::STOPWATCH;
                     break;
-                case ctrl('m'):
+                case ctrl('i'):
                     current_mode = Mode::TIMER;
                     break;
                 case ' ':
@@ -70,6 +70,11 @@ int App::run() {
                         this->reset_timer();
                     }
                     break;
+                case ctrl('v'): {
+                    if (current_mode == Mode::TIMER) {
+                        this->getlen_timer();
+                    }
+                }
             }
         }
 

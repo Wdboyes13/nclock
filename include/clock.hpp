@@ -16,6 +16,7 @@ using namespace srilakshmikanthanp::libfiglet;
 #define CPAIR_MIN 2
 #define CPAIR_SEC 3
 #define CPAIR_BAR 4
+#define CPAIR_HIGHLIGHT 4
 #define CPAIR_OVERLAY 5
 
 #define EMBEDDED_FONT "__embedded__"
@@ -29,7 +30,7 @@ struct Rect {
 };
 
 struct Time {
-    int h, m, s;
+    uint64_t h, m, s;
 };
 
 struct WinSz {
@@ -84,9 +85,11 @@ class App {
 
     void toggle_stopwatch();
     void reset_stopwatch();
+
     void toggle_timer();
     void reset_timer();
     void update_timer();
+    void getlen_timer();
 
     Rect twin_sz;
     WINDOW *twin, *barwin;
