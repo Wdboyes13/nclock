@@ -4,6 +4,7 @@
 #include <functional>
 #include <optional>
 #include <string>
+#include <chrono>
 
 #include "libfiglet.hpp"
 
@@ -44,6 +45,12 @@ struct TzOff {
     TzOff(long off) : type(NONLOCAL), off(off) {}
 };
 
+enum class Mode {
+    NORMAL,
+    STOPWATCH,
+    TIMER
+};
+
 class App {
   public:
     App();
@@ -75,6 +82,12 @@ class App {
     void set_tz_from_offset(long off);
     long tzstr_to_offset(const std::string& str);
 
+    void toggleStopwatch();
+    void resetStopwatch();
+    void toggleTimer();
+    void resetTimer();
+    void updateTimer();
+
     Rect twin_sz;
     WINDOW *twin, *barwin;
     figlet* fig;
@@ -82,4 +95,15 @@ class App {
     WinSz wsz;
     TzOff tzoff;
     long local_off = 0;
+
+    Mode current_mode = Mode::NORMAL;
+
+    std::chrono::steady_clock::time_point stopwatch_start;
+    std::chrono::milliseconds stopwatch_elapsed{0};
+    bool stopwatch_running = false;
+
+    std::chrono::milliseconds timer_duration{std::chrono::minutes(5)};
+    std::chrono::steady_clock::time_point timer_end;
+    bool timer_running = false;
+    bool timer_expired = false;
 };
