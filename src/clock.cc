@@ -90,13 +90,13 @@ int App::run() {
                     this->set_tz_from_offset(local_off);
                     tzoff = TzOff(TzOff::LOCAL);
                     break;
-                case 'n':
+                case ctrl('n'):
                     current_mode = Mode::NORMAL;
                     break;
-                case 's':
+                case ctrl('s'):
                     current_mode = Mode::STOPWATCH;
                     break;
-                case 't':
+                case ctrl('m'):
                     current_mode = Mode::TIMER;
                     break;
                 case ' ':
@@ -106,7 +106,7 @@ int App::run() {
                         this->toggleTimer();
                     }
                     break;
-                case 'r':
+                case ctrl('r'):
                     if (current_mode == Mode::STOPWATCH) {
                         this->resetStopwatch();
                     } else if (current_mode == Mode::TIMER) {
