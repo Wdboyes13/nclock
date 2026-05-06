@@ -16,6 +16,11 @@ void App::do_kbdb_win() {
     mvwprintw(dialog, 7, 2, "Change time zone: CTRL + T");
     mvwprintw(dialog, 8, 2, "Change time zone to UTC: CTRL + U");
     mvwprintw(dialog, 9, 2, "Change time zone to Local: CTRL + L");
+    mvwprintw(dialog, 11, 2, "Normal Mode: CTRL + N");
+    mvwprintw(dialog, 12, 2, "Stopwatch Mode: CTRL + S");
+    mvwprintw(dialog, 13, 2, "Timer Mode: CTRL + M");
+    mvwprintw(dialog, 14, 2, "Start/Stop Timer/Stopwatch: Space");
+    mvwprintw(dialog, 15, 2, "Reset Timer/Stopwatch: CTRL + R");
 
     ::refresh();
     wrefresh(dialog);
