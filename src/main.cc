@@ -8,49 +8,6 @@
 #define INPUT_TIMEOUT_MS 100
 #define REFRESH_INTERVAL_MS 100
 
-void App::toggleStopwatch() {
-    if (stopwatch_running) {
-        stopwatch_elapsed += std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::steady_clock::now() - stopwatch_start);
-        stopwatch_running = false;
-    } else {
-        stopwatch_start = std::chrono::steady_clock::now();
-        stopwatch_running = true;
-    }
-}
-
-void App::resetStopwatch() {
-    stopwatch_running = false;
-    stopwatch_elapsed = std::chrono::milliseconds(0);
-}
-
-void App::toggleTimer() {
-    if (timer_running) {
-        timer_running = false;
-    } else {
-        if (timer_expired) {
-            timer_expired = false;
-        }
-        timer_end = std::chrono::steady_clock::now() + timer_duration;
-        timer_running = true;
-    }
-}
-
-void App::resetTimer() {
-    timer_running = false;
-    timer_expired = false;
-}
-
-void App::updateTimer() {
-    if (timer_running) {
-        auto now = std::chrono::steady_clock::now();
-        if (now >= timer_end) {
-            timer_running = false;
-            timer_expired = true;
-        }
-    }
-}
-
 int App::run() {
     this->refresh();
 
@@ -101,22 +58,22 @@ int App::run() {
                     break;
                 case ' ':
                     if (current_mode == Mode::STOPWATCH) {
-                        this->toggleStopwatch();
+                        this->toggle_stopwatch();
                     } else if (current_mode == Mode::TIMER) {
-                        this->toggleTimer();
+                        this->toggle_timer();
                     }
                     break;
                 case ctrl('r'):
                     if (current_mode == Mode::STOPWATCH) {
-                        this->resetStopwatch();
+                        this->reset_stopwatch();
                     } else if (current_mode == Mode::TIMER) {
-                        this->resetTimer();
+                        this->reset_timer();
                     }
                     break;
             }
         }
 
-        this->updateTimer();
+        this->update_timer();
 
         auto now = std::chrono::steady_clock::now();
         if (now - last_tick >= tick || c != ERR) {

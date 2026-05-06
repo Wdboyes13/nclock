@@ -82,11 +82,11 @@ class App {
     void set_tz_from_offset(long off);
     long tzstr_to_offset(const std::string& str);
 
-    void toggleStopwatch();
-    void resetStopwatch();
-    void toggleTimer();
-    void resetTimer();
-    void updateTimer();
+    void toggle_stopwatch();
+    void reset_stopwatch();
+    void toggle_timer();
+    void reset_timer();
+    void update_timer();
 
     Rect twin_sz;
     WINDOW *twin, *barwin;

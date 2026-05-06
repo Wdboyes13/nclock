@@ -96,9 +96,13 @@ void App::refresh() {
 
     cblock(barwin, CPAIR_BAR, [&]() {
         std::string mode_string;
-        if (current_mode == Mode::NORMAL) mode_string = "NORMAL";
-        else if (current_mode == Mode::STOPWATCH) mode_string = "STOPWATCH";
-        else if (current_mode == Mode::TIMER) mode_string = "TIMER";
+        if (current_mode == Mode::NORMAL) {
+            mode_string = "NORMAL";
+        } else if (current_mode == Mode::STOPWATCH) {
+            mode_string = "STOPWATCH";
+        } else if (current_mode == Mode::TIMER) {
+            mode_string = "TIMER";
+        }
 
         std::string color_string = (has_colors()) ? "COLORED" : "NO COLOR";
         std::string font_string = (font_path == EMBEDDED_FONT) ? "standard (embedded)" : fs::path(font_path).filename().c_str();
